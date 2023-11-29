@@ -1,0 +1,37 @@
+---
+title: "Stats506_Project"
+author: "Heleyna Tucker"
+format: html
+editor: visual
+---
+
+# Project - Light data in buildings
+
+### Load in data:
+
+```{r}
+library(tidyverse)
+energy <- read_csv('/Users/19892/Downloads/cbecs2018_final_public.csv')
+engery_comp <- energy[c("LTZHRP", "LTOHRP", "LTNHRP", "FLUORP", "CFLRP", "BULBP", "HALOP", "HIDP", "LEDP", "LEDP", "OTLTP"),]
+```
+
+Read in File below and get necessary data:
+
+```{r}
+energy <- read_csv('/Users/19892/Downloads/cbecs2018_final_public.csv')
+energy_comp <- energy[c("PUBID","LTZHRP", "LTOHRP", "LTNHRP", "FLUORP", "CFLRP", "BULBP", "HALOP", "HIDP", "LEDP", "OTLTP")]
+head(energy_comp)
+```
+
+```{r}
+#Rename columns to be easily identifiable
+colnames(energy_comp) <- c("buildingID", "pLitNoHours", "pLitOpen", "pLitOffHours", "pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")
+head(energy_comp)
+```
+
+For the sake of data analysis, I will assume that the NA values are 0 percentage values:
+
+```{r}
+energy_comp[is.na(energy_comp)] <- 0
+head(energy_comp)
+```
