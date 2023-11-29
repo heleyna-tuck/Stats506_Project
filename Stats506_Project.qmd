@@ -35,3 +35,33 @@ For the sake of data analysis, I will assume that the NA values are 0 percentage
 energy_comp[is.na(energy_comp)] <- 0
 head(energy_comp)
 ```
+
+Look at a Summary:
+
+```{r}
+summary(energy_comp)
+```
+
+```{r}
+k <- 3
+kmeans_results <- kmeans(energy_comp, centers = k, nstart = 20)
+```
+
+Examine results of the clustering:
+
+```{r}
+#Cluster centers:
+kmeans_results$centers
+
+#Cluster assignment for each building:
+cluster_assignment <- kmeans_results$cluster
+```
+
+Visualization:
+
+```{r}
+library(GGally)
+
+ggplot(data.frame(energy_comp, cluster = factor(cluster_assignment)), aes(color = cluster)) +
+  ggpairs(mapping = aes(color = cluster))
+```
