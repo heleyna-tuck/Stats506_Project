@@ -33,7 +33,25 @@ For the sake of data analysis, I will assume that the NA values are 0 percentage
 
 ```{r}
 energy_comp[is.na(energy_comp)] <- 0
-head(energy_comp)
+
+#Add varivale to total the percentage of lights in each building:
+energy_comp["pTotalLights"] <- energy_comp$pFluor + energy_comp$pCompFluor + energy_comp$pIncandes + energy_comp$pHalogen + energy_comp$pHID + energy_comp$pLED + energy_comp$pOther
+
+```
+
+Because some totals add up to over/under 100% or 0% which means there was some inconsistency in the data collection for this dataset. For the sake of this project, I will remove these values from the data we will be doing the analysis on:
+
+```{r}
+length(which(energy_comp$pTotalLights ==100))
+length(energy_comp$pTotalLights)
+```
+
+As we can see above, there is about 80% of the data that has the percentage of lights that add up to 100%, still giving us a good amount of data to work with.
+
+```{r}
+#Remove rows of data that have pTotalLights not equal to 100
+energy_comp <- energy_comp[energy_comp$pTotalLights == 100, ]
+dim(energy_comp)
 ```
 
 Look at a Summary:
