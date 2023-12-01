@@ -79,16 +79,16 @@ heatmap(correlation_matrix,
 elbow plots
 
 ```{r}
-wcss <- vector("numeric", length = 10)  # Set the maximum number of clusters you want to consider
+wcss <- vector("numeric", length = 15)  # Set the maximum number of clusters you want to consider
 
-for (i in 1:10) {
+for (i in 1:15) {
   kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = i)
   wcss[i] <- kmeans_result$tot.withinss
 }
 ```
 
 ```{r}
-k_values <- 1:10  # Assuming you considered up to 10 clusters
+k_values <- 1:15  # Assuming you considered up to 10 clusters
 
 ggplot() +
   geom_line(aes(x = k_values, y = wcss), color = "blue") +
@@ -110,22 +110,26 @@ head(energy_comp)
 library(ggplot2)
 
 # Scatter plot
-ggplot(energy_comp, aes(x = cluster, y = pLitOpen, color = cluster)) +
-  geom_point(position = position_dodge(width = 0.8), size = 3) +
+ggplot(energy_comp, aes(x = factor(cluster), y = pLitOpen, fill = factor(cluster))) +
+  geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
   labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
        x = "Cluster Number",
        y = "Percentage of Lighting Open") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+  theme_minimal() 
 
-# Scatter plot
-ggplot(energy_comp, aes(x = cluster, y = pLitOffHours, color = cluster)) +
-  geom_point(position = position_dodge(width = 0.8), size = 3) +
+ggplot(energy_comp, aes(x = factor(cluster), y = pLitOffHours, fill = factor(cluster))) +
+  geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
   labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
        x = "Cluster Number",
-       y = "Percentage of Lighting Off Hours") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+       y = "Percentage of Lighting Open") +
+  theme_minimal()
+
+ggplot(energy_comp, aes(x = factor(cluster), y = pLitNoHours, fill = factor(cluster))) +
+  geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
+  labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
+       x = "Cluster Number",
+       y = "Percentage of Lighting Open") +
+  theme_minimal()
 ```
 
 Summary Stats for each Cluster:
@@ -136,28 +140,4 @@ cluster_summary <- aggregate(. ~ cluster, data = energy_comp[, c("cluster", "pLi
 
 # Print the summary
 print(cluster_summary)
-```
-
-```{r}
-k <- 3
-kmeans_results <- kmeans(energy_comp, centers = k, nstart = 20)
-```
-
-Examine results of the clustering:
-
-```{r}
-#Cluster centers:
-kmeans_results$centers
-
-#Cluster assignment for each building:
-cluster_assignment <- kmeans_results$cluster
-```
-
-Visualization:
-
-```{r}
-library(GGally)
-
-ggplot(data.frame(energy_comp, cluster = factor(cluster_assignment)), aes(color = cluster)) +
-  ggpairs(mapping = aes(color = cluster))
 ```
