@@ -76,10 +76,31 @@ heatmap(correlation_matrix,
 
 ### Try KMeans clustering:
 
+elbow plots
+
+```{r}
+wcss <- vector("numeric", length = 10)  # Set the maximum number of clusters you want to consider
+
+for (i in 1:10) {
+  kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = i)
+  wcss[i] <- kmeans_result$tot.withinss
+}
+```
+
+```{r}
+k_values <- 1:10  # Assuming you considered up to 10 clusters
+
+ggplot() +
+  geom_line(aes(x = k_values, y = wcss), color = "blue") +
+  geom_point(aes(x = k_values, y = wcss), color = "red") +
+  labs(title = "Elbow Method", x = "Number of Clusters (k)", y = "Within-Cluster Sum of Squares (WCSS)")
+
+```
+
 ```{r}
 # Assuming df is your data frame with lighting percentages
 set.seed(123)  # for reproducibility
-k <- 15  # specify the number of clusters
+k <- 4  # specify the number of clusters
 kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = k)
 energy_comp$cluster <- as.factor(kmeans_result$cluster)
 head(energy_comp)
