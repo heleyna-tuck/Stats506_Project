@@ -52,12 +52,37 @@ As we can see above, there is about 80% of the data that has the percentage of l
 #Remove rows of data that have pTotalLights not equal to 100
 energy_comp <- energy_comp[energy_comp$pTotalLights == 100, ]
 dim(energy_comp)
+head(energy_comp)
 ```
 
 Look at a Summary:
 
 ```{r}
 summary(energy_comp)
+```
+
+### Preliminary Graphs:
+
+```{r}
+correlation_matrix <- cor(energy_comp[, c("pLitOpen", "pLitOffHours", "pLitNoHours", "pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")])
+correlation_matrix
+
+heatmap(correlation_matrix, 
+        col = colorRampPalette(c("blue", "white", "red"))(100),
+        scale = "column",  # Add a legend for columns
+        main = "Correlation Heatmap with Legend"
+)
+```
+
+Try KMeans clustering:
+
+```{r}
+# Assuming df is your data frame with lighting percentages
+set.seed(123)  # for reproducibility
+k <- 20  # specify the number of clusters
+kmeans_result <- kmeans(energy_comp[, c("pLitOpen", "pLitOffHours", "pLitNoHours")], centers = k)
+energy_comp$cluster <- as.factor(kmeans_result$cluster)
+head(energy_comp)
 ```
 
 ```{r}
