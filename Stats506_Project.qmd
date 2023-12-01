@@ -74,13 +74,13 @@ heatmap(correlation_matrix,
 )
 ```
 
-Try KMeans clustering:
+### Try KMeans clustering:
 
 ```{r}
 # Assuming df is your data frame with lighting percentages
 set.seed(123)  # for reproducibility
 k <- 20  # specify the number of clusters
-kmeans_result <- kmeans(energy_comp[, c("pLitOpen", "pLitOffHours", "pLitNoHours")], centers = k)
+kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = k)
 energy_comp$cluster <- as.factor(kmeans_result$cluster)
 head(energy_comp)
 ```
