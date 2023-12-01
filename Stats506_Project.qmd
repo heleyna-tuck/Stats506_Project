@@ -79,10 +79,42 @@ heatmap(correlation_matrix,
 ```{r}
 # Assuming df is your data frame with lighting percentages
 set.seed(123)  # for reproducibility
-k <- 20  # specify the number of clusters
+k <- 15  # specify the number of clusters
 kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = k)
 energy_comp$cluster <- as.factor(kmeans_result$cluster)
 head(energy_comp)
+```
+
+```{r}
+library(ggplot2)
+
+# Scatter plot
+ggplot(energy_comp, aes(x = cluster, y = pLitOpen, color = cluster)) +
+  geom_point(position = position_dodge(width = 0.8), size = 3) +
+  labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
+       x = "Cluster Number",
+       y = "Percentage of Lighting Open") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+
+# Scatter plot
+ggplot(energy_comp, aes(x = cluster, y = pLitOffHours, color = cluster)) +
+  geom_point(position = position_dodge(width = 0.8), size = 3) +
+  labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
+       x = "Cluster Number",
+       y = "Percentage of Lighting Off Hours") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels for better readability
+```
+
+Summary Stats for each Cluster:
+
+```{r}
+# Calculate summary statistics for each cluster
+cluster_summary <- aggregate(. ~ cluster, data = energy_comp[, c("cluster", "pLitOpen", "pLitOffHours", "pLitNoHours","pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], mean)
+
+# Print the summary
+print(cluster_summary)
 ```
 
 ```{r}
