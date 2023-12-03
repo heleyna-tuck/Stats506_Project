@@ -1,7 +1,9 @@
 ---
 title: "Stats506_Project"
 author: "Heleyna Tucker"
-format: html
+format:
+  html:
+    embed-resources: true
 editor: visual
 ---
 
