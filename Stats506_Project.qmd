@@ -111,6 +111,19 @@ energy_comp$cluster <- as.factor(kmeans_result$cluster)
 head(energy_comp)
 ```
 
+How many values in each cluster:
+
+```{r}
+n1 <- length(which(energy_comp$cluster == 1))
+n2 <- length(which(energy_comp$cluster == 2))
+n3 <- length(which(energy_comp$cluster == 3))
+n4 <- length(which(energy_comp$cluster == 4))
+n1
+n2
+n3
+n4
+```
+
 Not using this at the moment:
 
 ```{r}
@@ -152,15 +165,38 @@ print(cluster_summary)
 ```
 
 ```{r}
-# Reshape data for ggplot
 library(tidyr)
+
+
+# Reshape data for ggplot
 data_long <- gather(cluster_summary, key = "light_type", value = "percentage", -cluster)
 
-# Create the clustered bar chart
-ggplot(data_long, aes(x = cluster, y = percentage, fill = light_type)) +
+# Separate data for two bar charts
+bar_chart1_data <- data_long[data_long$light_type %in% c("pLitOpen", "pLitOffHours", "pLitNoHours"), ]
+bar_chart2_data <- data_long[!data_long$light_type %in% c("pLitOpen", "pLitOffHours", "pLitNoHours"), ]
+
+# Create bar chart for pLitOpen, pLitOffHours, and pLitNoHours with upper error bars
+p1 <- ggplot(bar_chart1_data, aes(x = factor(cluster), y = percentage, fill = light_type)) +
   geom_bar(stat = "identity", position = "dodge") +
-  labs(title = "Lighting Type Percentage by Cluster",
+  geom_errorbar(aes(ymin = percentage, ymax = percentage + 5), position = position_dodge(width = 0.9), width = 0.25, vjust = 0) +  # Show only upper error bars
+  labs(title = "Percentage of Lighting Types (pLitOpen, pLitOffHours, pLitNoHours) by Cluster",
        x = "Cluster",
        y = "Percentage") +
   theme_minimal()
+
+# Create bar chart for the rest of the variables with upper error bars
+p2 <- ggplot(bar_chart2_data, aes(x = factor(cluster), y = percentage, fill = light_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(aes(ymin = percentage, ymax = percentage + 5), position = position_dodge(width = 0.9), width = 0.25, vjust = 0) +  # Show only upper error bars
+  labs(title = "Percentage of Other Lighting Types by Cluster",
+       x = "Cluster",
+       y = "Percentage") +
+  theme_minimal()
+
+# Display the two plots separately
+p1
+p2
+
 ```
+
+two plots and error bars.
