@@ -105,11 +105,13 @@ About k=4 is where the elbow is of the plot. Using k = 4 in kmeans clustering be
 # Assuming df is your data frame with lighting percentages
 set.seed(123)  # for reproducibility
 k <- 4  # specify the number of clusters
-kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = k)
+kmeans_result <- kmeans(energy_comp[, c("pLitOpen", "pLitOffHours", "pLitNoHours")], centers = k)
 energy_comp$cluster <- as.factor(kmeans_result$cluster)
 #Visualize first couple rows of the clustered data:
 head(energy_comp)
 ```
+
+Not using this at the moment:
 
 ```{r}
 library(ggplot2)
@@ -147,4 +149,18 @@ cluster_summary <- aggregate(. ~ cluster, data = energy_comp[, c("cluster", "pLi
 
 # Print the summary
 print(cluster_summary)
+```
+
+```{r}
+# Reshape data for ggplot
+library(tidyr)
+data_long <- gather(cluster_summary, key = "light_type", value = "percentage", -cluster)
+
+# Create the clustered bar chart
+ggplot(data_long, aes(x = cluster, y = percentage, fill = light_type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Lighting Type Percentage by Cluster",
+       x = "Cluster",
+       y = "Percentage") +
+  theme_minimal()
 ```
