@@ -78,7 +78,7 @@ heatmap(correlation_matrix,
 
 ### Try KMeans clustering:
 
-elbow plots
+Elbow Plot is graphed below:
 
 ```{r}
 wcss <- vector("numeric", length = 15)  # Set the maximum number of clusters you want to consider
@@ -99,19 +99,22 @@ ggplot() +
 
 ```
 
+About k=4 is where the elbow is of the plot. Using k = 4 in kmeans clustering below:
+
 ```{r}
 # Assuming df is your data frame with lighting percentages
 set.seed(123)  # for reproducibility
 k <- 4  # specify the number of clusters
 kmeans_result <- kmeans(energy_comp[, c("pFluor", "pCompFluor", "pIncandes", "pHalogen", "pHID", "pLED", "pOther")], centers = k)
 energy_comp$cluster <- as.factor(kmeans_result$cluster)
+#Visualize first couple rows of the clustered data:
 head(energy_comp)
 ```
 
 ```{r}
 library(ggplot2)
-
-# Scatter plot
+ 
+# Box plot of the pLitOpen category
 ggplot(energy_comp, aes(x = factor(cluster), y = pLitOpen, fill = factor(cluster))) +
   geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
   labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
@@ -119,16 +122,18 @@ ggplot(energy_comp, aes(x = factor(cluster), y = pLitOpen, fill = factor(cluster
        y = "Percentage of Lighting Open") +
   theme_minimal() 
 
+# Box plot of the pLitOffHours category
 ggplot(energy_comp, aes(x = factor(cluster), y = pLitOffHours, fill = factor(cluster))) +
   geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
-  labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
+  labs(title = "Cluster Distribution of Buildings based on Percent Lit Off Hours",
        x = "Cluster Number",
        y = "Percentage of Lighting Open") +
   theme_minimal()
 
+# Box plot of the pLitNoHours category
 ggplot(energy_comp, aes(x = factor(cluster), y = pLitNoHours, fill = factor(cluster))) +
   geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
-  labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
+  labs(title = "Cluster Distribution of Buildings based on Percent Lit No Hours",
        x = "Cluster Number",
        y = "Percentage of Lighting Open") +
   theme_minimal()
