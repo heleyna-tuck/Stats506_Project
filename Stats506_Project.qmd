@@ -76,6 +76,8 @@ heatmap(correlation_matrix,
 )
 ```
 
+Not many correlation differences in variables interested in.
+
 ### Try KMeans clustering:
 
 Elbow Plot is graphed below:
@@ -124,36 +126,6 @@ n3
 n4
 ```
 
-Not using this at the moment:
-
-```{r}
-library(ggplot2)
- 
-# Box plot of the pLitOpen category
-ggplot(energy_comp, aes(x = factor(cluster), y = pLitOpen, fill = factor(cluster))) +
-  geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
-  labs(title = "Cluster Distribution of Buildings based on Percent Lit Open",
-       x = "Cluster Number",
-       y = "Percentage of Lighting Open") +
-  theme_minimal() 
-
-# Box plot of the pLitOffHours category
-ggplot(energy_comp, aes(x = factor(cluster), y = pLitOffHours, fill = factor(cluster))) +
-  geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
-  labs(title = "Cluster Distribution of Buildings based on Percent Lit Off Hours",
-       x = "Cluster Number",
-       y = "Percentage of Lighting Open") +
-  theme_minimal()
-
-# Box plot of the pLitNoHours category
-ggplot(energy_comp, aes(x = factor(cluster), y = pLitNoHours, fill = factor(cluster))) +
-  geom_boxplot(width = 0.8, position = position_dodge(width = 0.8)) +
-  labs(title = "Cluster Distribution of Buildings based on Percent Lit No Hours",
-       x = "Cluster Number",
-       y = "Percentage of Lighting Open") +
-  theme_minimal()
-```
-
 Summary Stats for each Cluster:
 
 ```{r}
@@ -178,7 +150,7 @@ bar_chart2_data <- data_long[!data_long$light_type %in% c("pLitOpen", "pLitOffHo
 # Create bar chart for pLitOpen, pLitOffHours, and pLitNoHours with upper error bars
 p1 <- ggplot(bar_chart1_data, aes(x = factor(cluster), y = percentage, fill = light_type)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_errorbar(aes(ymin = percentage, ymax = percentage + 5), position = position_dodge(width = 0.9), width = 0.25, vjust = 0) +  # Show only upper error bars
+  geom_errorbar(aes(ymin = percentage, ymax = percentage + 5), position = position_dodge(width = 0.9), width = 0.25) +  # Show only upper error bars
   labs(title = "Percentage of Lighting Types (pLitOpen, pLitOffHours, pLitNoHours) by Cluster",
        x = "Cluster",
        y = "Percentage") +
@@ -187,7 +159,7 @@ p1 <- ggplot(bar_chart1_data, aes(x = factor(cluster), y = percentage, fill = li
 # Create bar chart for the rest of the variables with upper error bars
 p2 <- ggplot(bar_chart2_data, aes(x = factor(cluster), y = percentage, fill = light_type)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_errorbar(aes(ymin = percentage, ymax = percentage + 5), position = position_dodge(width = 0.9), width = 0.25, vjust = 0) +  # Show only upper error bars
+  geom_errorbar(aes(ymin = percentage, ymax = percentage + 5), position = position_dodge(width = 0.9), width = 0.25) +  # Show only upper error bars
   labs(title = "Percentage of Other Lighting Types by Cluster",
        x = "Cluster",
        y = "Percentage") +
